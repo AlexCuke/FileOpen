@@ -22,21 +22,27 @@ with open('cook_book.txt', encoding='utf-8') as file:
 #pprint.pprint(cook_book)
 
 
-# Задание 2
+# Задание 2 
 def get_shop_list_by_dishes(dishes, person_count):
     all_ingr={}
-
     for dish in dishes:
         if dish in cook_book:
-            for ingredient in cook_book[dish]:
-                if ingredient['ingredient_name'] in all_ingr:
-                    key=all_ingr.get(ingredient['ingredient_name'], ingredient['quantity'] * person_count)
-                    all_ingr[ingredient['ingredient_name']] = ingredient['quantity'] * person_count + key
+            for ingridient in cook_book[dish]:
+                kol=ingridient['quantity'] * person_count
+                ingr1={}
+                if ingridient['ingredient_name'] in all_ingr:
+                    key=ingr1.setdefault('quantity', kol)
+                    kol=key+kol
+                    ingr1.setdefault('measure', ingridient['measure'] )
+                    ingr1['quantity'] = (kol)
+                    all_ingr[ingridient['ingredient_name']] = ingr1
                 else:
-                    all_ingr.setdefault(ingredient['ingredient_name'], ingredient['quantity'] * person_count)
-    print(all_ingr)
+                    ingr1.setdefault('quantity', kol)  
+                    ingr1.setdefault('measure', ingridient['measure'] )
+                    all_ingr.setdefault(ingridient['ingredient_name'], ingr1)              
+    pprint.pprint(all_ingr)
+
 dishes=['Омлет','Салат Оливье']
 person_count=2
 
 get_shop_list_by_dishes(dishes, person_count)
-
