@@ -1,5 +1,5 @@
 import pprint
-'''
+
 cook_book = {}
 # Задание 1
 with open('cook_book.txt', encoding='utf-8') as file:
@@ -47,7 +47,7 @@ dishes=['Омлет','Салат Оливье']
 person_count=2
 
 get_shop_list_by_dishes(dishes, person_count)
-'''
+
 # Задание 3 
 new_file=[]
 new_files=[['1.txt'],['2.txt'],['3.txt']]
