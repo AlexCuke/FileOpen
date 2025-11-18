@@ -1,6 +1,7 @@
 import pprint
 
 cook_book = {}
+
 # Задание 1
 with open('cook_book.txt', encoding='utf-8') as file:
     while True:
@@ -20,7 +21,7 @@ with open('cook_book.txt', encoding='utf-8') as file:
         cook_book[dish] = ingredients
         file.readline()  # пропускаем пустую строку между рецептами
 
-#pprint.pprint(cook_book)
+pprint.pprint(cook_book)
 
 
 # Задание 2 
@@ -45,14 +46,12 @@ def get_shop_list_by_dishes(dishes, person_count):
 
 dishes=['Омлет','Салат Оливье']
 person_count=2
-
 get_shop_list_by_dishes(dishes, person_count)
 
 # Задание 3 
 new_file=[]
 new_files=[['1.txt'],['2.txt'],['3.txt']]
 for new_file in new_files:
-
     with open(new_file[0], encoding='utf-8') as file:
         count_string=0
         while True:
@@ -63,7 +62,6 @@ for new_file in new_files:
             count_string +=1  # счетчик строк
         #print(count_string)
         new_file.insert(1,count_string)
-    print(new_file)
 print()
 i=0
 for i in range (len(new_files)-1):
@@ -72,7 +70,7 @@ for i in range (len(new_files)-1):
             new_files[i]=new_files[i+1]
             new_files[i+1]=spis
 
-pprint.pprint(new_files)
+pprint.pprint(new_files) # тест списка
 
 for new_file in new_files:
      new_file[1]=str(new_file[1])
