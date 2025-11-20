@@ -1,17 +1,17 @@
 import pprint
 
 cook_book = {}
-
-# Задание 1
-with open('cook_book.txt', encoding='utf-8') as file:
-    while True:
-        dish = file.readline().strip()
-        if not dish:
-            break
-        count = int(file.readline())  # сколько ингредиентов будет
+# Задание 1 версия 2
+def load_cook_book(filename: str) -> dict:
+    with open(filename, encoding='utf-8') as file:
+        content = file.read().strip()  # читаем весь файл строкой
+    blocks = content.split('\n\n') # делим файл на блоки по пустым строкам между рецептами
+    for block in blocks:
+        lines = block.split('\n')
+        dish = lines[0].strip()          
+        count = int(lines[1].strip())   
         ingredients = []
-        for _ in range(count):
-            line = file.readline().strip()
+        for line in lines[2:2 + count]:
             ing, qty, unit = line.split(' | ')
             ingredients.append({
                 'ingredient_name': ing,
@@ -19,10 +19,10 @@ with open('cook_book.txt', encoding='utf-8') as file:
                 'measure': unit
             })
         cook_book[dish] = ingredients
-        file.readline()  # пропускаем пустую строку между рецептами
 
+    return cook_book
+cook_book = load_cook_book('cook_book.txt')    
 pprint.pprint(cook_book)
-
 
 # Задание 2 
 def get_shop_list_by_dishes(dishes, person_count):
@@ -30,52 +30,41 @@ def get_shop_list_by_dishes(dishes, person_count):
     for dish in dishes:
         if dish in cook_book:
             for ingridient in cook_book[dish]:
-                kol=ingridient['quantity'] * person_count
-                ingr1={}
-                if ingridient['ingredient_name'] in all_ingr:
-                    key=ingr1.setdefault('quantity', kol)
-                    kol=key+kol
-                    ingr1.setdefault('measure', ingridient['measure'] )
-                    ingr1['quantity'] = (kol)
-                    all_ingr[ingridient['ingredient_name']] = ingr1
-                else:
-                    ingr1.setdefault('quantity', kol)  
-                    ingr1.setdefault('measure', ingridient['measure'] )
-                    all_ingr.setdefault(ingridient['ingredient_name'], ingr1)              
+                name=ingridient['ingredient_name']
+                quantity=ingridient['quantity']*person_count
+                measure=ingridient['measure']
+                if name in all_ingr:   #добавляем количество к существующему ингридиенту                     
+                    all_ingr[name]['quantity'] += quantity 
+                else: #создаем новую запись
+                    all_ingr[name]={   # 
+                        'quantity': quantity,
+                        'measure': measure  
+                        }        
     pprint.pprint(all_ingr)
 
-dishes=['Омлет','Салат Оливье']
-person_count=2
-get_shop_list_by_dishes(dishes, person_count)
+get_shop_list_by_dishes(['Омлет','Салат Оливье'], 2)
 
 # Задание 3 
-new_file=[]
 new_files=[['1.txt'],['2.txt'],['3.txt']]
-for new_file in new_files:
-    with open(new_file[0], encoding='utf-8') as file:
-        count_string=0
-        while True:
-            line = file.readline().strip()
-            new_file.append(line)
-            if not line:
-                break
-            count_string +=1  # счетчик строк
-        #print(count_string)
-        new_file.insert(1,count_string)
-print()
-i=0
-for i in range (len(new_files)-1):
-    if new_files[i][1]>new_files[i+1][1]:
-            spis=new_files[i]
-            new_files[i]=new_files[i+1]
-            new_files[i+1]=spis
+for new_file  in new_files:
+    filename=new_file[0]
+    with open(filename, encoding='utf-8') as f:
+        lines=f.readlines()
+    count=len(lines)
+    new_file.insert(1,count)
+
+    for line in lines:
+            new_file.append(line.strip())
+new_files.sort(key=lambda x: x[1])
 
 pprint.pprint(new_files) # тест списка
 
-for new_file in new_files:
-     new_file[1]=str(new_file[1])
-
-
-with open('new.txt', 'w', encoding='utf-8') as file:
-    for new_file in new_files:
-        file.writelines([line + '\n' for line in new_file[:]])
+with open('new.txt', 'w', encoding='utf-8') as out: # записываем в файл
+    for file_info in new_files:
+        filename = file_info[0]
+        count = str(file_info[1])
+        lines = file_info[2:]
+        out.write(filename + '\n')
+        out.write(count + '\n')
+        for line in lines:
+            out.write(line + '\n')
